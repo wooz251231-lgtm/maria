@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+<title>기도 모음</title>
+<meta name="theme-color" content="#fbf5ea">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="기도 모음">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#fbf5ea;--bg2:#fdf0ef;--card:#fffdf9;--ink:#5d5346;--ink-soft:#a89a87;
+    --apr:#f0c9a8;--apr-d:#c08a55;--rose:#f0c6c4;--rose-d:#c0837f;--sage:#cdd9b8;--sage-d:#8a9b6a;
+    --line:rgba(93,83,70,.08);--shadow:rgba(192,138,85,.10);
+    --fs:1;            /* 글자 크기 배율 */
+  }
+  html.dark{
+    --bg1:#2b2620;--bg2:#322a28;--card:#37302a;--ink:#efe7da;--ink-soft:#b3a692;
+    --apr:#caa074;--apr-d:#e6c08a;--rose:#cd9b98;--rose-d:#e3aaa6;--sage:#a3b487;--sage-d:#c2d3a4;
+    --line:rgba(255,255,255,.07);--shadow:rgba(0,0,0,.28);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{min-height:100%}
+  body{
+    color:var(--ink);font-family:"Gowun Batang",serif;
+    background:linear-gradient(175deg,var(--bg1),var(--bg2));
+    min-height:100vh;
+    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    transition:background .3s,color .3s;
+  }
+
+  /* ── 헤더 ── */
+  header{
+    position:sticky;top:0;z-index:20;
+    padding:calc(16px + env(safe-area-inset-top)) 20px 14px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:linear-gradient(180deg,var(--bg1),rgba(251,245,234,0));
+  }
+  html.dark header{background:linear-gradient(180deg,var(--bg1),rgba(43,38,32,0))}
+  .head-left{display:flex;align-items:center;gap:6px;min-width:0}
+  .back{
+    display:none;border:none;background:none;cursor:pointer;
+    font-family:"Jua",sans-serif;font-size:calc(1.5rem * var(--fs));color:var(--apr-d);
+    padding:6px 6px 6px 0;flex:none;
+  }
+  .title{
+    font-family:"Jua",sans-serif;font-size:calc(1.6rem * var(--fs));color:var(--apr-d);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .tools{display:flex;gap:8px;flex:none}
+  .tool{
+    background:var(--card);border:none;border-radius:16px;min-width:50px;height:50px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Jua",sans-serif;font-size:1.05rem;color:var(--ink);cursor:pointer;
+    box-shadow:0 3px 9px var(--shadow);transition:transform .12s;
+  }
+  .tool:active{transform:scale(.92)}
+
+  /* ── 화면 전환 ── */
+  .screen{animation:fade .45s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ── 목록 ── */
+  .hint{text-align:center;font-family:"Jua",sans-serif;font-size:calc(1.1rem * var(--fs));color:var(--ink-soft);margin:24px 0 22px;padding:0 20px}
+  .list{padding:0 20px 44px;display:flex;flex-direction:column;gap:18px;max-width:600px;margin:0 auto}
+  .item{
+    background:var(--card);border:none;border-radius:26px;padding:22px 20px;
+    display:flex;align-items:center;gap:16px;cursor:pointer;transition:transform .15s,box-shadow .15s;
+    text-align:left;width:100%;font:inherit;color:inherit;
+    box-shadow:0 6px 18px var(--shadow);
+  }
+  .item:active{transform:translateY(2px) scale(.99);box-shadow:0 3px 10px var(--shadow)}
+  .item:nth-child(3n+1) .num{background:var(--apr);color:#fff}
+  .item:nth-child(3n+2) .num{background:var(--rose);color:#fff}
+  .item:nth-child(3n+3) .num{background:var(--sage);color:#fff}
+  html.dark .item .num{color:#2b2620}
+  .num{flex:none;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Jua",sans-serif;font-size:calc(1.4rem * var(--fs))}
+  .it-text{flex:1;min-width:0}
+  .it-title{font-family:"Jua",sans-serif;font-size:calc(1.45rem * var(--fs));line-height:1.35;word-break:keep-all;color:var(--ink)}
+  .it-sub{display:block;font-size:calc(.92rem * var(--fs));color:var(--ink-soft);margin-top:5px}
+  .chev{flex:none;font-family:"Jua",sans-serif;font-size:calc(1.4rem * var(--fs));color:var(--apr-d);opacity:.55}
+
+  /* ── 본문 ── */
+  .reader{max-width:640px;margin:0 auto;padding:8px 24px 60px}
+  .day-label{font-family:"Nanum Myeongjo",serif;color:var(--apr-d);font-size:calc(1.12rem * var(--fs));letter-spacing:.18em;margin-bottom:14px}
+  .heading{font-family:"Nanum Myeongjo",serif;font-weight:800;font-size:calc(1.95rem * var(--fs));line-height:1.5;color:var(--ink);margin-bottom:26px;white-space:pre-line}
+  .rule{width:50px;height:2px;background:var(--apr-d);opacity:.55;margin-bottom:30px;border-radius:2px}
+  .speaker{font-family:"Nanum Myeongjo",serif;font-weight:700;font-size:calc(1.18rem * var(--fs));color:var(--ink);margin-bottom:22px}
+  .sec-label{font-family:"Jua",sans-serif;font-size:calc(1.15rem * var(--fs));color:var(--rose-d);margin:26px 0 14px;letter-spacing:.04em}
+  .sec-label:first-of-type{margin-top:0}
+  .note{font-size:calc(.98rem * var(--fs));color:var(--ink-soft);line-height:1.7;margin-top:18px;padding:14px 16px;background:rgba(192,138,85,.07);border-radius:14px;word-break:keep-all}
+  .reader p.para{font-size:calc(1.3rem * var(--fs));line-height:2.05;color:var(--ink);margin-bottom:20px;word-break:keep-all}
+  .reader p.para .drop{color:var(--apr-d);font-weight:700;font-size:1.15em}
+
+  .refrain{margin-top:44px;padding-top:30px;border-top:1px solid var(--line);text-align:center}
+  .refrain p{font-family:"Nanum Myeongjo",serif;font-weight:700;font-size:calc(1.3rem * var(--fs));line-height:1.85;color:var(--apr-d);margin:0;word-break:keep-all;white-space:pre-line}
+
+  /* 9일 기도 페이지 넘기기 */
+  .pager{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:48px}
+  .pager button{
+    font-family:"Jua",sans-serif;font-size:calc(1.02rem * var(--fs));
+    background:var(--card);border:none;color:var(--ink);
+    padding:14px 22px;border-radius:999px;cursor:pointer;min-height:52px;
+    box-shadow:0 4px 12px var(--shadow);transition:transform .12s,opacity .2s;
+  }
+  .pager button:active{transform:scale(.95)}
+  .pager button:disabled{opacity:.3;cursor:default;box-shadow:none}
+  .pager .count{font-family:"Jua",sans-serif;font-size:calc(1rem * var(--fs));color:var(--ink-soft)}
+
+  /* 날짜 점 표시 */
+  .dots{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:24px}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--line);cursor:pointer;transition:.2s}
+  .dot.on{background:var(--apr-d);transform:scale(1.25)}
+
+  /* ── 신비/날짜 선택 화면 ── */
+  .pick-list{padding:0 20px 44px;display:flex;flex-direction:column;gap:14px;max-width:600px;margin:0 auto}
+  .pick{
+    background:var(--card);border:none;border-radius:22px;padding:20px 20px;
+    display:flex;align-items:center;gap:16px;cursor:pointer;transition:transform .15s,box-shadow .15s;
+    text-align:left;width:100%;font:inherit;color:inherit;
+    box-shadow:0 5px 15px var(--shadow);
+  }
+  .pick:active{transform:translateY(2px) scale(.99);box-shadow:0 3px 9px var(--shadow)}
+  .pick:nth-child(4n+1) .pnum{background:var(--apr);color:#fff}
+  .pick:nth-child(4n+2) .pnum{background:var(--rose);color:#fff}
+  .pick:nth-child(4n+3) .pnum{background:var(--sage);color:#fff}
+  .pick:nth-child(4n+4) .pnum{background:var(--apr-d);color:#fff}
+  html.dark .pick .pnum{color:#2b2620}
+  .pnum{flex:none;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Jua",sans-serif;font-size:calc(1.15rem * var(--fs))}
+  .pick .pt{flex:1;min-width:0;font-family:"Jua",sans-serif;font-size:calc(1.3rem * var(--fs));line-height:1.35;word-break:keep-all;color:var(--ink)}
+  .pick .chev{flex:none}
+
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+  <header>
+    <div class="head-left">
+      <button class="back" id="back" aria-label="뒤로">‹</button>
+      <div class="title" id="headTitle">기도 모음</div>
+    </div>
+    <div class="tools">
+      <button class="tool" id="fsDown" aria-label="글자 작게">가–</button>
+      <button class="tool" id="fsUp" aria-label="글자 크게">가＋</button>
+      <button class="tool" id="darkBtn" aria-label="화면 밝기">◐</button>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+<script src="./data.js"></script>
+<script>
+(function(){
+  "use strict";
+  const app = document.getElementById('app');
+  const headTitle = document.getElementById('headTitle');
+  const backBtn = document.getElementById('back');
+
+  // ── 설정(글자크기/다크모드)은 화면에 직접 적용. 저장은 하지 않음(아티팩트 호환) ──
+  const FS_STEPS = [0.9, 1.0, 1.15, 1.3, 1.5];
+  let fsIdx = 1;
+  function applyFs(){ document.documentElement.style.setProperty('--fs', FS_STEPS[fsIdx]); }
+  document.getElementById('fsUp').onclick = ()=>{ if(fsIdx<FS_STEPS.length-1){fsIdx++;applyFs();} };
+  document.getElementById('fsDown').onclick = ()=>{ if(fsIdx>0){fsIdx--;applyFs();} };
+  document.getElementById('darkBtn').onclick = ()=>{ document.documentElement.classList.toggle('dark'); };
+
+  // 시스템 다크모드 초기 반영
+  if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+    document.documentElement.classList.add('dark');
+  }
+
+  function esc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+  // 첫 글자를 강조(드롭캡)로 감싼 단락 HTML
+  function paraHtml(text, drop){
+    const t = esc(text);
+    if(drop && t.length){
+      return '<p class="para"><span class="drop">'+t.charAt(0)+'</span>'+t.slice(1)+'</p>';
+    }
+    return '<p class="para">'+t+'</p>';
+  }
+
+  function refrainHtml(text){
+    if(!text) return '';
+    return '<div class="refrain"><p>'+esc(text)+'</p></div>';
+  }
+
+  // ── 목록 화면 ──
+  function renderList(){
+    view='list';
+    backBtn.style.display='none';
+    headTitle.textContent='기도 모음';
+    let h = '<div class="screen"><p class="hint">읽고 싶은 기도를 골라 주세요</p><div class="list">';
+    PRAYERS.forEach((p,i)=>{
+      h += '<button class="item" data-i="'+i+'">'
+        + '<span class="num">'+(i+1)+'</span>'
+        + '<span class="it-text"><span class="it-title">'+esc(p.title)+'</span>'
+        + (p.subtitle?'<span class="it-sub">'+esc(p.subtitle)+'</span>':'')
+        + '</span><span class="chev">›</span></button>';
+    });
+    h += '</div></div>';
+    app.innerHTML = h;
+    app.querySelectorAll('.item').forEach(btn=>{
+      btn.onclick = ()=> openPrayer(parseInt(btn.dataset.i,10));
+    });
+    window.scrollTo(0,0);
+  }
+
+  // ── 본문 화면 ──
+  let cur = null;     // 현재 기도
+  let dayIdx = 0;     // 현재 날/신비
+  let view = 'list';  // 'list' | 'picker' | 'reader'
+
+  function openPrayer(i){
+    cur = PRAYERS[i];
+    dayIdx = 0;
+    backBtn.style.display='block';
+    headTitle.textContent = cur.title;
+    // 여러 항목(날/신비)이 있으면 선택 화면을 먼저, 아니면 바로 본문
+    if(cur.type==='novena' && cur.days && cur.days.length>1){
+      renderPicker();
+    } else if(cur.type==='novena'){
+      view='reader'; renderDay();
+    } else {
+      view='reader'; renderSingle();
+    }
+    window.scrollTo(0,0);
+  }
+
+  // ── 선택 화면(신비/날짜 고르기) ──
+  function renderPicker(){
+    view='picker';
+    backBtn.style.display='block';
+    headTitle.textContent = cur.title;
+    const isRosary = cur.id==='rosary';
+    const hint = isRosary ? '묵상할 신비를 골라 주세요' : '기도할 날을 골라 주세요';
+    let h='<div class="screen"><p class="hint">'+hint+'</p><div class="pick-list">';
+    cur.days.forEach((d,i)=>{
+      h+='<button class="pick" data-i="'+i+'">'
+        + '<span class="pnum">'+(i+1)+'</span>'
+        + '<span class="pt">'+esc(d.label||('제'+(i+1)+'항'))+'</span>'
+        + '<span class="chev">›</span></button>';
+    });
+    h+='</div></div>';
+    app.innerHTML=h;
+    app.querySelectorAll('.pick').forEach(btn=>{
+      btn.onclick=()=>{ dayIdx=parseInt(btn.dataset.i,10); view='reader'; renderDay(); window.scrollTo(0,0); };
+    });
+    window.scrollTo(0,0);
+  }
+
+  function renderSingle(){
+    let h='<div class="screen"><div class="reader">';
+    h+='<div class="heading">'+esc(cur.title)+'</div><div class="rule"></div>';
+    cur.body.forEach((t,idx)=> h+=paraHtml(t, idx===0));
+    h+=refrainHtml(cur.refrain);
+    h+='</div></div>';
+    app.innerHTML=h;
+  }
+
+  function renderDay(){
+    const d = cur.days[dayIdx];
+    const total = cur.days.length;
+    let h='<div class="screen" id="dayScreen"><div class="reader">';
+    h+='<div class="day-label">'+esc(d.label)+'</div>';
+    if(d.heading){ h+='<div class="heading">'+esc(d.heading)+'</div>'; }
+    h+='<div class="rule"></div>';
+
+    if(d.sections){
+      // 묵상/기도 등 소제목이 있는 구조
+      let lastKind='';
+      d.sections.forEach((s,idx)=>{
+        if(s.kind && s.kind!==lastKind){ h+='<div class="sec-label">'+esc(s.kind)+'</div>'; lastKind=s.kind; }
+        h+=paraHtml(s.text, false);
+      });
+      if(cur.note){ h+='<div class="note">'+esc(cur.note)+'</div>'; }
+    } else {
+      if(d.speaker) h+='<div class="speaker">'+esc(d.speaker)+'</div>';
+      d.body.forEach((t,idx)=> h+=paraHtml(t, idx===0 && !d.speaker ? true : idx===0));
+    }
+    h+=refrainHtml(cur.refrain);
+
+    // 페이지 넘기기
+    h+='<div class="pager">'
+      + '<button id="prev"'+(dayIdx===0?' disabled':'')+'>‹ 이전</button>'
+      + '<span class="count">'+(dayIdx+1)+' / '+total+'</span>'
+      + '<button id="next"'+(dayIdx===total-1?' disabled':'')+'>다음 ›</button>'
+      + '</div>';
+    // 점
+    h+='<div class="dots">';
+    for(let k=0;k<total;k++) h+='<span class="dot'+(k===dayIdx?' on':'')+'" data-k="'+k+'"></span>';
+    h+='</div>';
+
+    h+='</div></div>';
+    app.innerHTML=h;
+
+    const prev=document.getElementById('prev'), next=document.getElementById('next');
+    if(prev) prev.onclick=()=>{ if(dayIdx>0){dayIdx--;renderDay();window.scrollTo(0,0);} };
+    if(next) next.onclick=()=>{ if(dayIdx<total-1){dayIdx++;renderDay();window.scrollTo(0,0);} };
+    app.querySelectorAll('.dot').forEach(dot=>{
+      dot.onclick=()=>{ dayIdx=parseInt(dot.dataset.k,10); renderDay(); window.scrollTo(0,0); };
+    });
+  }
+
+  backBtn.onclick = ()=>{
+    if(view==='reader' && cur && cur.type==='novena' && cur.days && cur.days.length>1){
+      renderPicker();          // 본문 → 선택 화면
+    } else {
+      renderList();            // 선택 화면/단일 본문 → 목록
+    }
+    window.scrollTo(0,0);
+  };
+
+  renderList();
+})();
+
+// ── 서비스워커 등록 + 자동 갱신(접속 시 최신 반영) ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('./sw.js').then(reg=>{
+      // 새 버전이 감지되면 설치 완료 후 1회 자동 새로고침
+      reg.addEventListener('updatefound', ()=>{
+        const nw = reg.installing;
+        if(!nw) return;
+        nw.addEventListener('statechange', ()=>{
+          if(nw.state==='installed' && navigator.serviceWorker.controller){
+            window.location.reload();
+          }
+        });
+      });
+    }).catch(()=>{});
+    let refreshed=false;
+    navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+      if(refreshed) return; refreshed=true; window.location.reload();
+    });
+  });
+}
+</script>
+</body>
+</html>
