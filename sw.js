@@ -1,6 +1,6 @@
 // 서비스워커 — 오프라인 + 자동 갱신
 // 구조를 크게 바꿀 때 아래 버전 숫자를 올리면 옛 캐시가 정리됩니다.
-const CACHE = 'prayers-v2';
+const CACHE = 'prayers-v3';
 
 // 캐시 우선으로 둘 정적 자원(잘 안 바뀌는 것)
 const STATIC = [
